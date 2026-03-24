@@ -7,7 +7,7 @@ from streamlit_option_menu import option_menu
 st.set_page_config(page_title="HealthGuard AI", layout="wide", page_icon="🩺")
 
 # --- LOAD MODELS & ENCODERS ---
-# Using the .pkl extensions as required for deployment
+# Using the .pkl extensions as required for deployment [cite: 9, 18, 21]
 try:
     breast_cancer_model = pickle.load(open('breast_cancer_xgb_model_revised.pkl', 'rb'))
     thyroid_model = pickle.load(open('Thyroid_disease_xgb_model_revised.pkl', 'rb'))
@@ -30,12 +30,13 @@ with st.sidebar:
 
 # --- MODULE 1: BREAST CANCER ---
 if selected == "Breast Cancer":
-    st.markdown("<h1 style='color: #d81b60;'>🎀 Breast Cancer Classification</h1>", unsafe_with_html_safe=True)
-    st.info("Please enter the 30 clinical metrics for analysis .")
-
-    # Organizing 30 features into columns
+    # Fixed the keyword argument error here [cite: 1]
+    st.markdown("<h1 style='color: #d81b60;'>🎀 Breast Cancer Classification</h1>", unsafe_allow_html=True)
+    st.info("Please enter the 30 clinical metrics for analysis [cite: 2-8].")
+    
+    # Organizing 30 features into columns [cite: 2-8]
     col1, col2, col3 = st.columns(3)
-
+    
     with col1:
         radius_mean = st.number_input("radius_mean")
         texture_mean = st.number_input("texture_mean")
@@ -74,11 +75,11 @@ if selected == "Breast Cancer":
 
     if st.button("Run Breast Cancer Analysis"):
         features = [
-            radius_mean, texture_mean, perimeter_mean, area_mean, smoothness_mean,
+            radius_mean, texture_mean, perimeter_mean, area_mean, smoothness_mean, 
             compactness_mean, concavity_mean, concave_pts_mean, symmetry_mean, fractal_dim_mean,
-            radius_se, texture_se, perimeter_se, area_se, smoothness_se,
+            radius_se, texture_se, perimeter_se, area_se, smoothness_se, 
             compactness_se, concavity_se, concave_pts_se, symmetry_se, fractal_dim_se,
-            radius_worst, texture_worst, perimeter_worst, area_worst, smoothness_worst,
+            radius_worst, texture_worst, perimeter_worst, area_worst, smoothness_worst, 
             compactness_worst, concavity_worst, concave_pts_worst, symmetry_worst, fractal_dim_worst
         ]
         prediction = breast_cancer_model.predict([features])
@@ -88,80 +89,76 @@ if selected == "Breast Cancer":
 
 # --- MODULE 2: THYROID DISEASE ---
 elif selected == "Thyroid Disease":
-    st.markdown("<h1 style='color: #6a1b9a;'>🦋 Thyroid Disease Prediction</h1>", unsafe_with_html_safe=True)
-
+    st.markdown("<h1 style='color: #6a1b9a;'>🦋 Thyroid Disease Prediction</h1>", unsafe_allow_html=True)
+    
     col1, col2, col3 = st.columns(3)
-
+    
     with col1:
-        # Mapping values according to the Label Encoder data provided
+        # Mapping values according to the Label Encoder data provided [cite: 14]
         gender = st.selectbox("Gender", ["F", "M"])
         gender_map = {"F": 0, "M": 1}
-
+        
         smoking = st.selectbox("Smoking", ["No", "Yes"])
         smoking_map = {"No": 0, "Yes": 1}
-
+        
         hx_smoking = st.selectbox("Hx Smoking", ["No", "Yes"])
         hx_smoking_map = {"No": 0, "Yes": 1}
-
+        
         hx_radio = st.selectbox("Hx Radiothreapy", ["No", "Yes"])
         hx_radio_map = {"No": 0, "Yes": 1}
-
+        
         # Thyroid Function mapping [cite: 10, 14]
-        thy_func = st.selectbox("Thyroid Function",
-                                ["Euthyroid", "Clinical Hyperthyroidism", "Subclinical Hypothyroidism",
-                                 "Clinical Hypothyroidism", "Subclinical Hyperthyroidism"])
-        thy_func_map = {"Clinical Hyperthyroidism": 0, "Clinical Hypothyroidism": 1, "Euthyroid": 2,
-                        "Subclinical Hyperthyroidism": 3, "Subclinical Hypothyroidism": 4}
+        thy_func = st.selectbox("Thyroid Function", ["Euthyroid", "Clinical Hyperthyroidism", "Subclinical Hypothyroidism", "Clinical Hypothyroidism", "Subclinical Hyperthyroidism"])
+        thy_func_map = {"Clinical Hyperthyroidism": 0, "Clinical Hypothyroidism": 1, "Euthyroid": 2, "Subclinical Hyperthyroidism": 3, "Subclinical Hypothyroidism": 4}
 
     with col2:
-        phys_exam = st.selectbox("Physical Examination",
-                                 ["Multinodular goiter", "Single nodular goiter-right", "Single nodular goiter-left",
-                                  "Normal", "Diffuse goiter"])
-        phys_exam_map = {"Diffuse goiter": 0, "Multinodular goiter": 1, "Normal": 2, "Single nodular goiter-left": 3,
-                         "Single nodular goiter-right": 4}
-
+        # Categorical mappings for physical examination and pathology [cite: 15]
+        phys_exam = st.selectbox("Physical Examination", ["Multinodular goiter", "Single nodular goiter-right", "Single nodular goiter-left", "Normal", "Diffuse goiter"])
+        phys_exam_map = {"Diffuse goiter": 0, "Multinodular goiter": 1, "Normal": 2, "Single nodular goiter-left": 3, "Single nodular goiter-right": 4}
+        
         adenopathy = st.selectbox("Adenopathy", ["No", "Right", "Bilateral", "Left", "Extensive", "Posterior"])
         adenopathy_map = {"Bilateral": 0, "Extensive": 1, "Left": 2, "No": 3, "Posterior": 4, "Right": 5}
-
+        
         pathology = st.selectbox("Pathology", ["Papillary", "Micropapillary", "Follicular", "Hurthel cell"])
         pathology_map = {"Follicular": 0, "Hurthel cell": 1, "Micropapillary": 2, "Papillary": 3}
-
+        
         focality = st.selectbox("Focality", ["Uni-Focal", "Multi-Focal"])
         focality_map = {"Multi-Focal": 0, "Uni-Focal": 1}
 
     with col3:
+        # Risk and staging mappings [cite: 16]
         risk = st.selectbox("Risk", ["Low", "Intermediate", "High"])
         risk_map = {"High": 0, "Intermediate": 1, "Low": 2}
-
+        
         t_stage = st.selectbox("T", ["T1a", "T1b", "T2", "T3a", "T3b", "T4a", "T4b"])
         t_map = {"T1a": 0, "T1b": 1, "T2": 2, "T3a": 3, "T3b": 4, "T4a": 5, "T4b": 6}
-
+        
         n_stage = st.selectbox("N", ["N0", "N1a", "N1b"])
         n_map = {"N0": 0, "N1a": 1, "N1b": 2}
-
+        
         m_stage = st.selectbox("M", ["M0", "M1"])
         m_map = {"M0": 0, "M1": 1}
-
+        
         stage = st.selectbox("Stage", ["I", "II", "III", "IVA", "IVB"])
         stage_map = {"I": 0, "II": 1, "III": 2, "IVA": 3, "IVB": 4}
 
     if st.button("Predict Thyroid Status"):
         features = [
-            gender_map[gender], smoking_map[smoking], hx_smoking_map[hx_smoking],
+            gender_map[gender], smoking_map[smoking], hx_smoking_map[hx_smoking], 
             hx_radio_map[hx_radio], thy_func_map[thy_func], phys_exam_map[phys_exam],
             adenopathy_map[adenopathy], pathology_map[pathology], focality_map[focality],
             risk_map[risk], t_map[t_stage], n_map[n_stage], m_map[m_stage], stage_map[stage]
         ]
         prediction = thyroid_model.predict([features])
-        # Mapping based on "Recurred" [cite: 17]
+        # Mapping based on "Recurred" outcome [cite: 17]
         result = "Recurred" if prediction[0] == 1 else "Not Recurred"
         st.success(f"Thyroid Recurrence Status: {result}")
 
 # --- MODULE 3: HEART DISEASE ---
 elif selected == "Heart Disease":
-    st.markdown("<h1 style='color: #c62828;'>❤️ Heart Disease Prediction</h1>", unsafe_with_html_safe=True)
+    st.markdown("<h1 style='color: #c62828;'>❤️ Heart Disease Prediction</h1>", unsafe_allow_html=True)
     st.info("Input patient metrics for heart disease screening [cite: 19-20].")
-
+    
     col1, col2 = st.columns(2)
     with col1:
         age = st.number_input("age")
@@ -180,6 +177,7 @@ elif selected == "Heart Disease":
         thal = st.number_input("thal")
 
     if st.button("Predict Heart Condition"):
+        # Features array for heart disease prediction [cite: 19-20]
         features = [age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]
         prediction = heart_model.predict([features])
         result = "Positive" if prediction[0] == 1 else "Negative"
@@ -187,23 +185,23 @@ elif selected == "Heart Disease":
 
 # --- MODULE 4: DIABETES ---
 elif selected == "Diabetes":
-    st.markdown("<h1 style='color: #1565c0;'>🩸 Diabetes Prediction</h1>", unsafe_with_html_safe=True)
-    st.info("Use the following features from the clinical data for prediction .")
-
+    st.markdown("<h1 style='color: #1565c0;'>🩸 Diabetes Prediction</h1>", unsafe_allow_html=True)
+    st.info("Use the following features from the clinical data for prediction [cite: 22-24].")
+    
     col1, col2 = st.columns(2)
     with col1:
-        Pregnancies = st.number_input("Pregnancies", min_value=0)
-        Glucose = st.number_input("Glucose")
-        BloodPressure = st.number_input("BloodPressure")
-        SkinThickness = st.number_input("SkinThickness")
+        Pregnancies = st.number_input("Pregnancies", min_value=0) # [cite: 22]
+        Glucose = st.number_input("Glucose") # [cite: 22]
+        BloodPressure = st.number_input("BloodPressure") # [cite: 23]
+        SkinThickness = st.number_input("SkinThickness") # [cite: 23]
     with col2:
-        Insulin = st.number_input("Insulin")
-        BMI = st.number_input("BMI")
-        DiabetesPedigreeFunction = st.number_input("DiabetesPedigreeFunction")
-        Age = st.number_input("Age", min_value=1)
+        Insulin = st.number_input("Insulin") # [cite: 23]
+        BMI = st.number_input("BMI") # [cite: 24]
+        DiabetesPedigreeFunction = st.number_input("DiabetesPedigreeFunction") # [cite: 24]
+        Age = st.number_input("Age", min_value=1) # [cite: 24]
 
     if st.button("Predict Diabetes Outcome"):
-        # Features must match the exact order and names from the source
+        # Features list matching the clinical data order [cite: 22-24]
         features = [Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age]
         prediction = diabetes_model.predict([features])
         result = "Diabetic" if prediction[0] == 1 else "Non-Diabetic"
