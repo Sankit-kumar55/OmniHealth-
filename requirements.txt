@@ -1,0 +1,5 @@
+streamlit
+numpy
+streamlit-option-menu
+xgboost
+scikit-learn
