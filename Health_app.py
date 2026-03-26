@@ -14,7 +14,7 @@ try:
     thyroid_encoder = pickle.load(open('label_encoders_thyroid.pkl', 'rb'))
     heart_model = pickle.load(open('heart_disease_xgb_model.pkl', 'rb'))
     diabetes_model = pickle.load(open('diabetes.pkl', 'rb'))
-    # autism_model = pickle.load(open('autism_model.pkl', 'rb')) #  Placeholder
+    
 except Exception as e:
     st.error(f"Error loading model files: {e}. Ensure all .pkl files are in the same folder.")
 
@@ -22,8 +22,8 @@ except Exception as e:
 with st.sidebar:
     selected = option_menu(
         "Health Prediction System",
-        ["Breast Cancer", "Thyroid Disease", "Heart Disease", "Diabetes", "Autism"],
-        icons=["gender-female", "activity", "heart-pulse", "droplet-half", "person-bounding-box"],
+        ["Breast Cancer", "Thyroid Disease", "Heart Disease", "Diabetes", ],
+        icons=["gender-female", "activity", "heart-pulse", "droplet-half", ],
         menu_icon="hospital-fill",
         default_index=0,
     )
