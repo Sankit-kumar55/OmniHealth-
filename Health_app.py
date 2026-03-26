@@ -31,7 +31,7 @@ with st.sidebar:
 # --- MODULE 1: BREAST CANCER ---
 if selected == "Breast Cancer":
     st.markdown("<h1 style='color: #d81b60;'>🎀 Breast Cancer Classification</h1>", unsafe_allow_html=True)
-    st.info("Please enter the 30 clinical metrics for analysis [cite: 2-8].")
+    st.info("Please enter the 30 clinical metrics for analysis.")
     
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -132,7 +132,7 @@ elif selected == "Thyroid Disease":
 # --- MODULE 3: HEART DISEASE ---
 elif selected == "Heart Disease":
     st.markdown("<h1 style='color: #c62828;'>❤️ Heart Disease Prediction</h1>", unsafe_allow_html=True)
-    st.info("Input patient metrics for heart disease screening [cite: 19-20].")
+    st.info("Input patient metrics for heart disease screening .")
     
     col1, col2 = st.columns(2)
     with col1:
